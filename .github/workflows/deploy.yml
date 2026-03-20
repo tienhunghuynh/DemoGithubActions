@@ -1,0 +1,26 @@
+name: Docker Build and Push
+
+on:
+  push:
+    branches: [ "develop" ]
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Bước 1 - Tải code về máy ảo
+        uses: actions/checkout@v4
+
+      - name: Bước 2 - Đăng nhập vào Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Bước 3 - Build và Push Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/demo-app:latest
